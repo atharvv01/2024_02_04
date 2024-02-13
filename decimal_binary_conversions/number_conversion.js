@@ -52,7 +52,6 @@ function binaryConversion(num, numLen) {
 	return outputArray
 }
 
-
 /** give 2's complement of array
  * 
  * @param {[]} inputBinaryArray binary array
@@ -274,7 +273,7 @@ function getJSNumberRepresentation(inputDeciamlNumber) {
 const arr = [1,1,1,1]
 const num = -3;
 const numLen = 11;
-const binaryArray = get_Simple_2s_Compliment(num, numLen);
+const binaryArray = get_Simple_Decimal_From_2s_Compliment(-3,11);
 //const binaryArray = binaryConversion(num, numLen);
 console.log(binaryArray);
 // const ans = get_Simple_Decimal_From_2s_Compliment(arr)
