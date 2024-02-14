@@ -27,7 +27,7 @@ class InfiniteNumber {
             else {
                 while (inputObject != 0) {
                     tempArray.unshift((inputObject % 10))
-                    inputObject = inputObject / 10
+                    inputObject = Math.floor(inputObject / 10)
                 }
             }
 
@@ -153,15 +153,29 @@ class InfiniteNumber {
     * @param {Array} arr2 second array
     * @returns {True} if array2 is greater than array 1  
     */
-    findBiggerArray(arr1, arr2) {
+    findBiggerArray(InfiniteNumberInput1,InfiniteNumberInput2) {
+        // console.log(InfiniteNumberInpu1);
+        // console.log(InfiniteNumberInput2);
+        let arr1 = InfiniteNumberInput1.getInternalArray()
+        let arr2 = InfiniteNumberInput2.getInternalArray()
+
         /**First we check weather length of array 2 is bigger if so return 2 */
         if (arr2.length > arr1.length) {
             return true
         }
-
-        /**Then we will check if the first index of array2 is bigger */
-        else if (arr2[0] > arr1[0]) {
-            return true
+        else if (arr2.length == arr1.length) {
+            /**Then we will check if the first index of array2 is bigger */
+            if (arr2[0] > arr1[0]) {
+                return true
+            }
+            else{
+                for (let i = 1; i < arr2.length; i++) {
+                    if (arr2[i] > arr1[i]) {
+                        return true
+                    }
+                }
+            }
+        
         }
         /**Even if the first index is same then we will run a for loop from
          * 2nd index to last index to check all the indexes of both arrays
@@ -169,11 +183,7 @@ class InfiniteNumber {
          * even after loop is over we dont find any greater number means array1
          * is greater so return false
          */
-        for (let i = 1; i < arr2.length; i++) {
-            if (arr2[i] > arr1[i]) {
-                return true
-            }
-        }
+        
         return false
     }
 
@@ -197,38 +207,46 @@ class InfiniteNumber {
 
     /**This functions adds two numbers
     * @param {InfiniteNumber} infiniteNumber a infinite number type of data
-	* @returns {InfiniteNumber} resultant infinite number after addition
+    * @returns {InfiniteNumber} resultant infinite number after addition
     */
     addTwoNos(InfiniteNumberInput) {
-        let arr1 = this.getInternalArray()
-        let arr2 = InfiniteNumberInput.getInternalArray()
+        let arr1 = this.getInternalArray();
+        let arr2 = InfiniteNumberInput.getInternalArray();
 
-        //declaring some varilables 
-        let ansArr = []
-        let sum = 0
-        let carry = 0; // to keep track of carry
+        // Ensure both arrays have the same length by padding the shorter one with zeros
+        const maxLength = Math.max(arr1.length, arr2.length);
+        arr1 = this.padArray(arr1, maxLength);
+        arr2 = this.padArray(arr2, maxLength);
 
+        let ansArr = [];
+        let sum = 0;
+        let carry = 0;
 
-
-        for (let i = arr1.length - 1; i >= 0; i--) {
-
-            carry = arr1[i] + arr2[i] + carry
-            sum = carry % 10 // this makes sure the units part of the carry is pushed into array
-            carry = Math.floor(carry / 10) // while carry is updated 
-            ansArr[i] = sum;
+        for (let i = maxLength - 1; i >= 0; i--) {
+            sum = arr1[i] + arr2[i] + carry;
+            ansArr[i] = sum % 10;
+            carry = Math.floor(sum / 10);
         }
 
-        if (carry != 0) {
-            ansArr.unshift(carry)
+        if (carry !== 0) {
+            ansArr.unshift(carry);
         }
 
-        let resultant = new InfiniteNumber(ansArr)
-        return resultant
+        return new InfiniteNumber(ansArr);
     }
 
+    // Helper function to pad the array with leading zeros to match the given length
+    padArray(arr, length) {
+        while (arr.length < length) {
+            arr.unshift(0); // Add leading zeros
+        }
+        return arr;
+    }
+
+
     /**This functions substracts two numbers
-     * @param {InfiniteNumber} infiniteNumber a infinite number type of data
-	* @returns {InfiniteNumber} resultant infinite number after substraction
+    * @param {InfiniteNumber} infiniteNumber a infinite number type of data
+    * @returns {InfiniteNumber} resultant infinite number after substraction
     */
     subTwoNos(InfiniteNumberInput) {
 
@@ -300,12 +318,13 @@ class InfiniteNumber {
             ansArr.shift()
             i++
         }
-        let resultant = ne
+        let resultant = new InfiniteNumber(ansArr)
+        return resultant
     }
 
     /**This function multiplies two numbers 
     * @param {InfiniteNumber} infiniteNumber a infinite number type of data
-	* @returns {InfiniteNumber} resultant infinite number after multiplicaation
+    * @returns {InfiniteNumber} resultant infinite number after multiplicaation
     */
     mulTwoNos(InfiniteNumberInput) {
 
@@ -337,35 +356,36 @@ class InfiniteNumber {
         return resultant
     }
 
-     /**This function divides two numbers 
-    * @param {InfiniteNumber} infiniteNumber a infinite number type of data
-	* @returns {InfiniteNumber} resultant infinite number after division
-    */
-    divTwoNos(InfiniteNumberInput){
+    /**This function divides two numbers 
+   * @param {InfiniteNumber} infiniteNumber a infinite number type of data
+   * @returns {InfiniteNumber} resultant infinite number after division
+   */
+    divTwoNos(InfiniteNumberInput) {
         let arr1 = this.getInternalArray()
-		let arr2 = InfiniteNumberInput.getInternalArray()
+        let arr2 = InfiniteNumberInput.getInternalArray()
 
-		//we will perform division by repeted subtraction
-		// declare a variable for that
-		let divCounter = 0
-		let resultant_No = new InfiniteNumber(this._internalArray)
-	
-		while(!this.findBiggerArray(arr1,arr2)){
+        //we will perform division by repeted subtraction
+        // declare a variable for that
+        let divCounter = 0
+        let resultant_No = new InfiniteNumber(this._internalArray)
+        console.log(resultant_No);
+        console.log(this.findBiggerArray(resultant_No,InfiniteNumberInput));
+        while (!this.findBiggerArray(resultant_No,InfiniteNumberInput)) {
+            
+            console.log("here");
+            resultant_No = resultant_No.subTwoNos(InfiniteNumberInput)
+            console.log(resultant_No);
+            divCounter++
+            
 
-			resultant_No = resultant_No.subTwoNos(infiniteNumber)
-			divCounter++
-
-		}
-		// again make this as an array
-		let resultant = []
-		while(divCounter!=0){
-			resultant.unshift(divCounter%10)
-			divCounter = Math.floor(divCounter/10)
-		}
-        console.log(resultant)
-		// let resultInfiniteNumber = new InfiniteNumber(resultant)
-		// return resultInfiniteNumber
-	}
+        }
+        // again make this as an array
+        console.log(divCounter);
+        // let resultant = new InfiniteNumber(divCounter)
+        // console.log(resultant)
+        // let resultInfiniteNumber = new InfiniteNumber(resultant)
+        // return resultInfiniteNumber
+    }
 
 }
 
@@ -373,15 +393,15 @@ class InfiniteNumber {
 /**This is for unit testing to check the sanity of the code */
 
 function unityTesting() {
-    let arr1 = new InfiniteNumber([1,2])
-    let arr2 = new InfiniteNumber([5])
-    let result = arr1.mulTwoNos(arr2)
-    console.log(result.getNumberAsString());
+    // let arr1 = new InfiniteNumber([1,2,3])
+    // let arr2 = new InfiniteNumber([5,0])
+    // let result = arr1.mulTwoNos(arr2)
+    // console.log(result.getNumberAsString());
 
 
-    let arr3 = new InfiniteNumber([1,2])
+    let arr3 = new InfiniteNumber([1, 2])
     let arr4 = new InfiniteNumber([6])
-    // let resultDiv = arr3.divTwoNos(arr4)
+    let resultDiv = arr3.divTwoNos(arr4)
     // console.log(resultDiv);
     // console.log(resultDiv.getNumberAsString());
 
